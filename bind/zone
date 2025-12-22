@@ -1,0 +1,27 @@
+
+$ORIGIN beranite.dk.
+$TTL 3600
+
+@   IN SOA ns1.dandomain.com. hostmaster.dandomain.com. (
+        2025122201 ; Serial (YYYYMMDDNN)
+        7200       ; Refresh (2h)
+        1800       ; Retry (30m)
+        1209600    ; Expire (14d)
+        300        ; Minimum TTL (5m)
+)
+
+; Name servers
+@   IN NS ns.dandomain.com.
+@   IN NS ns2.dandomain.com.
+
+; GitHub Pages A records for root domain
+@   IN A 185.199.108.153
+@   IN A 185.199.109.153
+@   IN A 185.199.110.153
+@   IN A 185.199.111.153
+
+; CNAME for www subdomain
+www IN CNAME beranite.github.io.
+
+; Optional: TXT records for verification or SPF
+@   IN TXT "v=spf1 include:_spf.example.net ~all"
