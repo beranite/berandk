@@ -1,24 +1,88 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Eric Beran</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
+        body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#f4f4f4;color:#111;margin:0}
+        .intro{max-width:900px;margin:48px auto 20px;padding:28px;background:#fff;border-radius:8px;text-align:center;box-shadow:0 1px 4px rgba(16,24,40,0.06)}
+        .intro h1{margin:0 0 8px}
+        .intro p{margin:0;color:#444}
+
+        /* Simple blog preview subsection */
+        .blog-preview{max-width:900px;margin:20px auto 60px;padding:18px}
+        .blog-preview h2{margin:0 0 10px;font-size:1.2rem}
+        .posts{display:grid;gap:12px}
+        .post{background:#fff;padding:12px;border-radius:6px;box-shadow:0 1px 3px rgba(16,24,40,0.05)}
+        .excerpt{color:#333;line-height:1.4}
+        a.view-more{display:inline-block;margin-top:8px;color:#0b67ff}
     </style>
 </head>
 <body>
-    <h1>Hello, my name is Eric Beran</h1>
-    <p>Welcome to my simple web page!</p>
+    <section class="intro">
+        <h1>Hello, my name is Eric Beran</h1>
+        <p>Welcome to my simple web page!</p>
+    </section>
+
+    <section class="blog-preview" id="blog-preview">
+        <h2>Latest blog excerpts</h2>
+        <div id="bp-posts" class="posts">Loading blog preview…</div>
+        <p style="margin-top:12px"><a class="view-more" href="blog.html">View full blog</a></p>
+    </section>
+
+    <script>
+        // Try to load the blog content from blog.html and extract the post excerpts.
+        // This keeps index.html simple while showing the same excerpts as blog.html.
+        async function loadBlogPreview(){
+            const container = document.getElementById('bp-posts');
+            try{
+                const res = await fetch('blog.html', {cache: 'no-cache'});
+                if(!res.ok) throw new Error('Cannot fetch blog.html');
+                const html = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Prefer the #posts list from blog.html
+                const postsEl = doc.getElementById('posts') || doc.querySelector('.posts');
+                if(!postsEl){ container.textContent = '(no posts found in blog.html)'; return; }
+
+                // Copy up to 5 post previews into this page for a simple subsection
+                const items = Array.from(postsEl.children).slice(0,5);
+                container.innerHTML = '';
+                for(const it of items){
+                    const card = document.createElement('div');
+                    card.className = 'post';
+                    // If original post cards have title/excerpt links, try to use their text
+                    const title = it.querySelector('h2,h3')?.textContent || it.querySelector('a')?.textContent || 'Post';
+                    const excerpt = it.querySelector('.excerpt')?.innerHTML || it.innerHTML || '';
+                    const h = document.createElement('div');
+                    h.innerHTML = `<strong>${escapeHtml(title)}</strong>`;
+                    const ex = document.createElement('div'); ex.className = 'excerpt'; ex.innerHTML = excerpt;
+                    card.appendChild(h);
+                    card.appendChild(ex);
+                    // if the original has a read link, copy it
+                    const read = it.querySelector('a.read') || it.querySelector('a');
+                    if(read){
+                        const a = document.createElement('a');
+                        a.href = read.getAttribute('href');
+                        a.textContent = read.textContent || 'Read full post';
+                        a.className = 'view-more';
+                        card.appendChild(a);
+                    }
+                    container.appendChild(card);
+                }
+            }catch(e){
+                // If fetching blog.html isn't allowed (file://) suggest using a local server.
+                container.innerHTML = '<em>Unable to load blog preview locally. Run a local server (see README) or click "View full blog".</em>';
+                console.error(e);
+            }
+        }
+
+        function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+        window.addEventListener('DOMContentLoaded', loadBlogPreview);
+    </script>
 </body>
 </html>

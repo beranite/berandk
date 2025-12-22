@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Eric Beran — Blog</title>
+  <style>
+    :root{--accent:#0b67ff}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#f7f8fb;color:#111;margin:0}
+    .container{max-width:900px;margin:36px auto;padding:0 18px}
+    header{display:flex;align-items:center;gap:12px}
+    header h1{margin:0}
+    .posts{margin-top:24px;display:grid;gap:18px}
+    .post{background:#fff;border-radius:8px;padding:16px;box-shadow:0 1px 4px rgba(16,24,40,0.06)}
+    .post h2{margin:0 0 8px;font-size:1.15rem}
+    .post .excerpt{color:#333;line-height:1.45}
+    .post a.read{display:inline-block;margin-top:10px;color:var(--accent)}
+    .meta{color:#666;font-size:0.9rem}
+    footer{margin:36px 0;color:#666;font-size:0.9rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Eric Beran — Blog</h1>
+    </header>
+    <p class="meta">Latest posts — excerpts (first 10 lines of each post)</p>
+
+    <div id="posts" class="posts">Loading posts…</div>
+
+    <footer>
+      <p>To add a new post: create a folder under `posts/`, add an `index.html` with a container element `<article class="post-content">...</article>`, and add an entry to `posts/posts.json`.</p>
+    </footer>
+  </div>
+
+  <script>
+    async function loadPosts(){
+      const listEl = document.getElementById('posts');
+      try{
+        const resp = await fetch('posts/posts.json', {cache: 'no-cache'});
+        if(!resp.ok) throw new Error('Failed to load posts manifest');
+        const posts = await resp.json();
+        listEl.innerHTML = '';
+        for(const p of posts){
+          const card = document.createElement('div');
+          card.className = 'post';
+          const title = document.createElement('h2');
+          title.textContent = p.title;
+          const excerpt = document.createElement('div');
+          excerpt.className = 'excerpt';
+          excerpt.textContent = 'Loading excerpt...';
+          const read = document.createElement('a');
+          read.className = 'read';
+          read.href = p.path; read.textContent = 'Read full post';
+
+          card.appendChild(title);
+          card.appendChild(excerpt);
+          card.appendChild(read);
+          listEl.appendChild(card);
+
+          // fetch post HTML and extract first 10 lines from .post-content
+          try{
+            const r = await fetch(p.path + 'index.html', {cache: 'no-cache'});
+            if(!r.ok) { excerpt.textContent = '(preview unavailable)'; continue; }
+            const text = await r.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const contentEl = doc.querySelector('.post-content');
+            if(!contentEl){ excerpt.textContent = '(no .post-content found)'; continue; }
+            // get innerText, split into lines, filter, take first 10
+            const raw = contentEl.innerText || contentEl.textContent || '';
+            const lines = raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+            const top = lines.slice(0,10).map(escapeHtml).join('<br>');
+            excerpt.innerHTML = top;
+          }catch(e){ excerpt.textContent = '(error loading excerpt)'; }
+        }
+      }catch(e){
+        listEl.textContent = 'Failed to load posts.';
+        console.error(e);
+      }
+    }
+
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    window.addEventListener('DOMContentLoaded', loadPosts);
+  </script>
+</body>
+</html>
