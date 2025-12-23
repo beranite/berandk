@@ -8,25 +8,39 @@
     body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;max-width:800px;margin:40px auto;padding:0 16px}
     header h1{margin:0 0 8px}
     .post-content p{margin:0 0 12px}
+    .post-top-image{display:flex;justify-content:center;margin:14px 0}
+    .top-image{max-width:100%;height:auto;border-radius:6px}
   </style>
 </head>
 <body>
   <header>
-    <h1>First Post</h1>
+    <h1>Axapta and OLAP</h1>
     <p>by Eric Beran — Dec 22, 2025</p>
   </header>
+  <div class="post-top-image">
+    <img class="top-image" src="../AxaptaTopPage.png" alt="Axapta top page">
+  </div>
+  <div class="teaser">
+  </div>
   <article class="post-content">
-    <p>This is the first paragraph of the first post. It introduces the topic and sets the tone.</p>
-    <p>Here's the second paragraph with more details and examples to illustrate the idea.</p>
-    <p>The third paragraph continues the discussion and provides a bit more background.</p>
-    <p>Fourth paragraph: a short anecdote or supporting fact.</p>
-    <p>Fifth paragraph: links or references could be placed here.</p>
-    <p>Sixth paragraph: an aside or personal note from the author.</p>
-    <p>Seventh paragraph: an example or small code snippet description.</p>
-    <p>Eighth paragraph: additional commentary and perspective.</p>
-    <p>Ninth paragraph: conclusions or transition towards the end.</p>
-    <p>Tenth paragraph: closing remarks and call to action.</p>
-    <p>Eleventh paragraph: optional extra notes beyond the top-10 preview.</p>
+  This is the first post in a series of stories from my time working with Axapta (now Dynamics AX / Dynamics 365 F&O) at Damgaard Data / Navision / Microsoft from 1997 to 2002. In this post I will talk about OLAP and Axapta.
+ <br>
+  The story goes from around October 1997 to July 2002. So actually only 4½ years of my professional career but I do believe that it shaped my entire career. I met a lot of really cool people that I enjoyed working with for many years. I will not mention their names here but I hope they will join and add information to the storytelling. 
+<br><br>
+I got hire to do C++ development but in the end I actually only wrote a few lines of C++ but tons of X++ code. My first task was to work with the Financial team - I knew very little about Financial software systems and what is ERP but I did have Accouting at the Technical University of Denmark. They asked me to do some testing and finally a small task to develop a period definition system. But I have used financials for many years as a cashier in different associations and later on Accounting for Pension Policies. 
+It was not a success in the beginning but luckily I was pulled out to look into OLAP for Axapta and this is one of the stories to tell but not the biggest. 
+<br>
+<br>
+Back then the Business Partners knew nothing about OLAP and data analytics and the end-customer/companies was not interested at all. The thought in the development department was that the ability to examine the data in the ERP system must become important for the companies. So what was this OLAP (On-line analytical processing) was coined back then. I found out that there is multiple kinds ROLAP, MOLAP and even HOLAP, that is Relational OLAP, Multidimensional OLAP and Hybrid OLAP. MOLAP was kind of the smartest, it fetch the data do some aggregation (to some extend comes back to that) as a cube and then provide fast analysis of data in multiple dimensions. However, the more dimensions with more outcome the more cells had to be filled out (the curse of exponential growth) - but some people had quickly figured out only to calculate parts of the cells and do some smart sums and subtractions. ROLAP was direct call to the database and the ROLAP vendors said that they were so smart that they always could do it fast - I don't think anybody told them how to look at the SQL Execution plan - it always ended up with mulitple table scans. 
+<br>
+I started to contact different OLAP vendors, SAS institute was like don't call us we call you, so I didn't call them again, then Cognos pretty smart (now owned by IBM and still alive) and finally the one that had OLAP.COM Hyberion Solutions, and then tons of inferior companies. I started to talk more with Hyberion and I went to there office in Boston for how to set it up smartly. I remember driving in a Cabriolet listening to the Swedisk song 'Vill ha dig' by Drömhus…. LOUD. Hyberion Solutions is now owned by Oracle.
+In Axapta I wrote some code that made it possible to define Cubes from the Axapta tables, where it exploited the defined relations between tables. Based on the definition it could generate some text that could make the right SQL Decision Support Object (read cube) and then somehow set it up in the Microsoft Analysis Server - how this was done I cannot remember. And to query the data you could use MDX (MultiDimensional eXpression).
+<br>
+I believe that some customers did start to use it but as a developer you are never really told if it was really used. I believe I did a presentation to the Damgaard Briefing in London 1999. But after all we (Axapta) got there too early. Today it is standard everybody knows about ETL (Extract Transfer and Load), PowerBI, Microsoft Synapse/Fabric and Cognos is still alive eventhough IBM tries to change the name.
+<br>
+So if you have ever used this OLAP thing in AXAPTA, or have more experience back then (after 2002 is not interesting here) tell the story here. 
+<br>
+Next story will be about benchmarking, the Axapta Standard User and query theory.
   </article>
 </body>
 </html>

@@ -67,11 +67,11 @@
             const doc = parser.parseFromString(text, 'text/html');
             const contentEl = doc.querySelector('.post-content');
             if(!contentEl){ excerpt.textContent = '(no .post-content found)'; continue; }
-            // get innerText, split into lines, filter, take first 10
+            // get innerText, normalize whitespace, then take first 200 characters
             const raw = contentEl.innerText || contentEl.textContent || '';
-            const lines = raw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-            const top = lines.slice(0,10).map(escapeHtml).join('<br>');
-            excerpt.innerHTML = top;
+            const normalized = raw.replace(/\s+/g, ' ').trim();
+            const snippet = normalized.length > 400 ? normalized.slice(0,400) + '…' : normalized;
+            excerpt.innerHTML = escapeHtml(snippet);
           }catch(e){ excerpt.textContent = '(error loading excerpt)'; }
         }
       }catch(e){
