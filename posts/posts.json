@@ -1,12 +1,23 @@
 [
   {
     "title": "Axapta and OLAP",
-    "slug": "first ??-post",
-    "path": "posts/first-post/"
+    "slug": "Axapta-and-OLAP",
+    "path": "posts/AxaptaOlap/",
+    "date": "2025-12-22",
+    "type": "Axapta"
   },
   {
-    "title": "Second Post",
-    "slug": "second-post",
-    "path": "posts/second-post/"
+    "title": "Merry Christmas! 2025",
+    "slug": "Merry-Christmas-2025",
+    "path": "posts/MerryChristmas2025/",
+    "date": "2025-12-24",
+    "type": "Greetings"
+  },
+    {
+    "title": "Thunderforce",
+    "slug": "Thunderforce",
+    "path": "posts/Thunderforce/",
+    "date": "2025-12-24",
+    "type": "Thunderforce"
   }
 ]
