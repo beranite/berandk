@@ -62,13 +62,22 @@
                     const ex = document.createElement('div'); ex.className = 'excerpt'; ex.innerHTML = excerpt;
                     card.appendChild(h);
                     card.appendChild(ex);
-                    // if the original has a read link, copy it
+                    // if the original has a read link, copy it and resolve to absolute URL; otherwise construct from manifest
                     const read = it.querySelector('a.read') || it.querySelector('a');
+                    let linkHref = null;
                     if(read){
+                        linkHref = read.getAttribute('href') || read.href;
+                    }
+                    if(!linkHref && p && p.path){
+                        try{ linkHref = new URL(p.path, location.href).href; }catch(e){ linkHref = p.path; }
+                    }
+                    if(linkHref){
                         const a = document.createElement('a');
-                        a.href = read.getAttribute('href');
-                        a.textContent = read.textContent || 'Read full post';
+                        a.href = linkHref;
+                        a.textContent = (read && read.textContent) || 'Read full post';
                         a.className = 'view-more';
+                        a.target = '_blank';
+                        a.rel = 'noopener';
                         card.appendChild(a);
                     }
                     container.appendChild(card);

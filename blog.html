@@ -24,8 +24,7 @@
     <header>
       <h1>Eric Beran — Blog</h1>
     </header>
-    <p class="meta">Latest posts — excerpts</p>
-
+   
     <div id="posts" class="posts">Loading posts…</div>
 
     <footer>
@@ -66,7 +65,15 @@
           excerpt.textContent = 'Loading excerpt...';
           const read = document.createElement('a');
           read.className = 'read';
-          read.href = p.path; read.textContent = 'Read full post';
+          // resolve the post path to an absolute URL so links are shareable externally
+          try{
+            read.href = new URL(p.path, location.href).href;
+          }catch(e){
+            read.href = p.path;
+          }
+          read.target = '_blank';
+          read.rel = 'noopener';
+          read.textContent = 'Read full post';
 
           card.appendChild(title);
           if(meta.textContent) card.appendChild(meta);
